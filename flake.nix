@@ -1,6 +1,5 @@
-
 {
-  description = "Nix development flake for <project_name>";
+  description = "Nix development flake for rusty chess";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixpkgs-unstable";
@@ -45,24 +44,26 @@
                 binutils
 
                 # OpenGL
-                libGL
-                libGLU
                 mesa
-
-                # X11
-                xorg.libX11
-                xorg.libXrandr
-                xorg.libXinerama
-                xorg.libXcursor
-                xorg.libXi
 
                 # bindgen
                 llvmPackages.libclang
               ];
 
+              LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
+                # OpenGL
+                libGL
+                libGLU
+
+                # X11
+                libX11
+                libXrandr
+                libXinerama
+                libXcursor
+                libXi
+              ];
+
               shellHook = ''
-                echo Entered Rust dev shell for project
-                export PROJECT_PREFIX=rust
                 export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib"
                 export RAYLIB_CMAKE_ARGS="-DUSE_WAYLAND=ON"
               '';
